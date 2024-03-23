@@ -250,9 +250,9 @@ class Screener(object):
         # Use one of the text values and get the parent table from that
         bs = BeautifulSoup(html, "html.parser")
         filters_table = None
-        for td in bs.find_all("td"):
-            if td.get_text().strip() == "Exchange":
-                filters_table = td.find_parent("table")
+        for th in bs.find_all("th"):
+            if th.get_text().strip() == "Exchange":
+                filters_table = th.find_parent("table")
         if filters_table is None:
             raise Exception("Could not locate filter parameters")
 
@@ -262,7 +262,7 @@ class Screener(object):
 
         # Populate dict with filtering options and corresponding filter tags
         filter_dict = {}
-        td_list = filters_table.find_all("td")
+        th_list = filters_table.find_all("th")
 
         for i in range(0, len(td_list) - 2, 2):
             current_dict = {}
@@ -270,10 +270,10 @@ class Screener(object):
                 continue
 
             # Even td elements contain filter name (as shown on web page)
-            filter_text = td_list[i].get_text().strip()
+            filter_text = th_list[i].get_text().strip()
 
             # Odd td elements contain the filter tag and options
-            selections = td_list[i + 1].find("select")
+            selections = th_list[i + 1].find("select")
             filter_name = selections.get("data-filter").strip()
 
             # Store filter options for current filter
